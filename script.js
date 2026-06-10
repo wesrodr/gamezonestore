@@ -67,50 +67,10 @@ function enviarFormulario(evento) {
 //   1. Com API Key do Gemini (IA real)
 //   2. Sem API Key (respostas automáticas programadas em JavaScript)
 
-// ---- CONFIGURAÇÃO DA API DO GEMINI ----
-// Para ativar a IA real, insira sua chave de API aqui:
-// Obtenha gratuitamente em: https://aistudio.google.com/app/apikey
+// ---- CONFIGURAÇÃO DA API DO CHAT ----
+// A chave do Gemini fica escondida na Serverless Function /api/chat da Vercel.
 
-const GEMINI_API_KEY = "AIzaSyBzoAWvK5DLGnJPY9F_woxQDTvbRAJD5P0"; // <-- INSIRA SUA API KEY AQUI
-
-// Modelo Gemini utilizado
-const GEMINI_MODEL = "gemini-flash-latest";
-
-// Contexto da loja enviado ao Gemini para personalizar as respostas
-const CONTEXTO_LOJA = `
-Você é o GameBot, assistente virtual da GameZone Store, uma loja gamer online.
-Responda sempre de forma amigável, direta e use emojis relacionados a games.
-Limite suas respostas a 3 parágrafos no máximo.
-Não use Markdown como **negrito**, listas com asterisco ou títulos.
-Escreva frases curtas e separe ideias com quebras de linha.
-Cumprimente apenas na primeira resposta da conversa ou quando o usuário mandar somente uma saudação.
-Nas demais mensagens, responda direto ao que foi perguntado.
-
-Informações da loja:
-- Nome: GameZone Store
-- Tipo: Loja de produtos gamers online
-- Contato: contato@gamezonestore.com | (86) 9 9999-9999
-- Horário: Seg–Sex das 8h às 20h
-- Frete grátis: acima de R$ 500,00
-
-Produtos disponíveis:
-- Teclado Mecânico RGB: R$ 249,90
-- Mouse Gamer 12000 DPI: R$ 189,90
-- Headset Gamer 7.1: R$ 299,90
-- Cadeira Gamer Ergonômica: R$ 999,90
-- Monitor Gamer 144Hz: R$ 1.299,90
-- Controle Bluetooth: R$ 219,90
-- Placa de Vídeo Gamer: R$ 3.499,90
-- Console de Última Geração: R$ 3.899,90
-
-Combos/Ofertas:
-- Combo Teclado + Mouse: R$ 369,90 (economia de R$ 69,90)
-- Kit Streamer Pro: R$ 579,90 (economia de R$ 129,80)
-- Setup Iniciante: R$ 799,90 (economia de R$ 159,70)
-- Setup Competitivo: R$ 1.699,90 (economia de R$ 339,70)
-
-Como comprar: navegue pelos produtos, clique em "Comprar" ou preencha o formulário de contato.
-`;
+const CHAT_API_URL = "/api/chat";
 
 // ---- ELEMENTOS DO CHATBOT ----
 let chatToggle  = document.getElementById("chat-toggle");
@@ -172,18 +132,8 @@ function enviarMensagem() {
     // Exibe o indicador de "digitando..."
     let digitando = adicionarDigitando();
 
-    // Decide se usa IA (Gemini API) ou respostas locais
-    if (GEMINI_API_KEY !== "") {
-        // Usa a API Gemini com IA real
-        chamarGemini(texto, digitando, primeiraMensagem);
-    } else {
-        // Usa as respostas automáticas programadas
-        setTimeout(function () {
-            digitando.remove();
-            let resposta = responderLocal(texto);
-            adicionarMensagem(resposta, "bot");
-        }, 800);
-    }
+    // Usa a API segura do projeto na Vercel
+    chamarGemini(texto, digitando, primeiraMensagem);
 }
 
 // ---- FUNÇÃO: ADICIONAR MENSAGEM AO CHAT ----
@@ -253,51 +203,49 @@ function adicionarDigitando() {
 }
 
 // ---- FUNÇÃO: CHAMADA À API GEMINI ----
-// Esta função envia a mensagem do usuário para a IA do Google e retorna a resposta.
-// Para funcionar, é necessário ter uma API Key válida inserida em GEMINI_API_KEY.
+// Esta função envia a mensagem para /api/chat, que chama o Gemini no servidor.
+// A API Key fica apenas nas variáveis de ambiente da Vercel.
 
 async function chamarGemini(mensagemUsuario, elementoDigitando, primeiraMensagem) {
 
-    // URL da API do Gemini
-    let url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
-
-    // Corpo da requisição enviado ao Gemini
+    // Corpo da requisição enviado para a API segura do projeto
     let corpo = {
-        contents: [
-            {
-                parts: [
-                    {
-                        // Envia o contexto da loja + a mensagem do usuário
-                        text: CONTEXTO_LOJA
-                            + "\n\nEstado da conversa: "
-                            + (primeiraMensagem ? "primeira mensagem do usuário." : "conversa em andamento. Não comece com olá, oi, salve ou boas-vindas.")
-                            + "\n\nMensagem do usuário: " + mensagemUsuario
-                    }
-                ]
-            }
-        ]
+        mensagem: mensagemUsuario,
+        primeiraMensagem: primeiraMensagem
     };
 
     try {
-        // Faz a requisição POST para a API do Gemini
-        let resposta = await fetch(url, {
+        // Faz a requisição POST para a Serverless Function da Vercel
+        let resposta = await fetch(CHAT_API_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(corpo)
         });
 
-        let dados = await resposta.json();
+        let dados;
+        try {
+            dados = await resposta.json();
+        } catch (erroJson) {
+            dados = { error: { message: "A API retornou uma resposta sem JSON válido." } };
+        }
 
         if (!resposta.ok) {
-            console.error("Erro retornado pela API Gemini:", dados);
-            adicionarMensagem("A API do Gemini retornou um erro. Abra o console para ver os detalhes e tente novamente.", "bot");
+            let mensagemErro = dados.error && dados.error.message
+                ? dados.error.message
+                : "Erro desconhecido retornado pela API.";
+
+            console.error("Erro retornado pela API Gemini:", {
+                status: resposta.status,
+                statusText: resposta.statusText,
+                detalhes: dados
+            });
+            adicionarMensagem("A API do Gemini respondeu com erro " + resposta.status + ": " + mensagemErro, "bot");
             return;
         }
 
         // Extrai o texto da resposta da IA
-        if (dados.candidates && dados.candidates[0] && dados.candidates[0].content && dados.candidates[0].content.parts && dados.candidates[0].content.parts[0]) {
-            let textoResposta = dados.candidates[0].content.parts[0].text;
-            adicionarMensagem(textoResposta, "bot");
+        if (dados.resposta) {
+            adicionarMensagem(dados.resposta, "bot");
         } else {
             console.error("Resposta inesperada da API Gemini:", dados);
             adicionarMensagem("Desculpe, tive um problema ao processar sua mensagem. Tente novamente! 😅", "bot");
