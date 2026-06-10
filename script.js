@@ -75,6 +75,7 @@ const GEMINI_API_KEY = "AIzaSyBzoAWvK5DLGnJPY9F_woxQDTvbRAJD5P0"; // <-- INSIRA 
 
 // Modelo Gemini utilizado
 const GEMINI_MODEL = "gemini-flash-latest";
+const GEMINI_TIMEOUT_MS = 8000;
 
 // Contexto da loja enviado ao Gemini para personalizar as respostas
 const CONTEXTO_LOJA = `
@@ -260,6 +261,10 @@ async function chamarGemini(mensagemUsuario, elementoDigitando, primeiraMensagem
 
     // URL da API do Gemini
     let url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+    let controlador = new AbortController();
+    let timeoutId = setTimeout(function () {
+        controlador.abort();
+    }, GEMINI_TIMEOUT_MS);
 
     // Corpo da requisição enviado ao Gemini
     let corpo = {
@@ -283,17 +288,15 @@ async function chamarGemini(mensagemUsuario, elementoDigitando, primeiraMensagem
         let resposta = await fetch(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(corpo)
+            body: JSON.stringify(corpo),
+            signal: controlador.signal
         });
 
         let dados = await resposta.json();
 
-        // Remove o indicador de digitando
-        elementoDigitando.remove();
-
         if (!resposta.ok) {
             console.error("Erro retornado pela API Gemini:", dados);
-            adicionarMensagem("Tive um problema ao consultar a IA agora. Confira a chave da API e tente novamente.", "bot");
+            adicionarMensagem(responderLocal(mensagemUsuario), "bot");
             return;
         }
 
@@ -308,9 +311,17 @@ async function chamarGemini(mensagemUsuario, elementoDigitando, primeiraMensagem
 
     } catch (erro) {
         // Em caso de erro na requisição
-        elementoDigitando.remove();
         console.error("Erro ao chamar a API Gemini:", erro);
-        adicionarMensagem("Ops! Não consegui me conectar ao servidor. Tente novamente mais tarde. 🔌", "bot");
+        if (erro.name === "AbortError") {
+            adicionarMensagem("A IA demorou para responder, então usei uma resposta rápida da loja:<br><br>" + responderLocal(mensagemUsuario), "bot");
+        } else {
+            adicionarMensagem("Ops! Não consegui me conectar à IA agora, então vou responder com nosso atendimento automático:<br><br>" + responderLocal(mensagemUsuario), "bot");
+        }
+    } finally {
+        clearTimeout(timeoutId);
+        if (elementoDigitando && elementoDigitando.isConnected) {
+            elementoDigitando.remove();
+        }
     }
 }
 
