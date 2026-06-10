@@ -222,6 +222,10 @@ function escaparHTML(texto) {
 
 function formatarTextoBot(texto) {
     return escaparHTML(texto)
+        .replace(
+            /(https?:\/\/[^\s<]+)/g,
+            '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
+        )
         .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
         .replace(/&lt;strong&gt;/g, "<strong>")
         .replace(/&lt;\/strong&gt;/g, "</strong>")

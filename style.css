@@ -1023,6 +1023,17 @@ body {
     font-weight: 700;
 }
 
+.msg-balao a {
+    color: var(--neon-verde);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.msg-balao a:hover {
+    color: var(--branco);
+}
+
 .mensagem.bot .msg-balao {
     background: var(--preto-card);
     color: var(--branco);
