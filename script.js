@@ -75,7 +75,7 @@ const GEMINI_API_KEY = "AIzaSyBzoAWvK5DLGnJPY9F_woxQDTvbRAJD5P0"; // <-- INSIRA 
 
 // Modelo Gemini utilizado
 const GEMINI_MODEL = "gemini-flash-latest";
-const GEMINI_TIMEOUT_MS = 8000;
+const GEMINI_TIMEOUT_MS = 30000;
 
 // Contexto da loja enviado ao Gemini para personalizar as respostas
 const CONTEXTO_LOJA = `
@@ -296,7 +296,7 @@ async function chamarGemini(mensagemUsuario, elementoDigitando, primeiraMensagem
 
         if (!resposta.ok) {
             console.error("Erro retornado pela API Gemini:", dados);
-            adicionarMensagem(responderLocal(mensagemUsuario), "bot");
+            adicionarMensagem("A API do Gemini retornou um erro. Abra o console para ver os detalhes e tente novamente.", "bot");
             return;
         }
 
@@ -313,9 +313,9 @@ async function chamarGemini(mensagemUsuario, elementoDigitando, primeiraMensagem
         // Em caso de erro na requisição
         console.error("Erro ao chamar a API Gemini:", erro);
         if (erro.name === "AbortError") {
-            adicionarMensagem("A IA demorou para responder, então usei uma resposta rápida da loja:<br><br>" + responderLocal(mensagemUsuario), "bot");
+            adicionarMensagem("A API do Gemini demorou mais de 30 segundos para responder. Tente enviar a mensagem novamente.", "bot");
         } else {
-            adicionarMensagem("Ops! Não consegui me conectar à IA agora, então vou responder com nosso atendimento automático:<br><br>" + responderLocal(mensagemUsuario), "bot");
+            adicionarMensagem("Ops! Não consegui me conectar à API do Gemini agora. Veja o console para mais detalhes.", "bot");
         }
     } finally {
         clearTimeout(timeoutId);
