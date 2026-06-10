@@ -1012,7 +1012,15 @@ body {
     padding: 12px 15px;
     border-radius: 14px;
     font-size: 0.94rem;
-    line-height: 1.5;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    white-space: normal;
+}
+
+.msg-balao strong {
+    color: var(--neon-verde);
+    font-weight: 700;
 }
 
 .mensagem.bot .msg-balao {
@@ -1145,6 +1153,10 @@ body {
         right: 20px;
         bottom: 90px;
     }
+
+    .msg-balao {
+        max-width: 88%;
+    }
 }
 
 /* Mobile */
@@ -1187,5 +1199,23 @@ body {
 
     .produtos-grid {
         grid-template-columns: 1fr;
+    }
+
+    .chat-widget {
+        width: 100vw;
+        height: 100vh;
+        max-height: 100vh;
+        right: 0;
+        bottom: 0;
+        border-radius: 0;
+    }
+
+    .chat-box {
+        padding: 14px;
+    }
+
+    .msg-balao {
+        max-width: 86%;
+        font-size: 0.9rem;
     }
 }

@@ -81,6 +81,8 @@ const CONTEXTO_LOJA = `
 Você é o GameBot, assistente virtual da GameZone Store, uma loja gamer online.
 Responda sempre de forma amigável, direta e use emojis relacionados a games.
 Limite suas respostas a 3 parágrafos no máximo.
+Não use Markdown como **negrito**, listas com asterisco ou títulos.
+Escreva frases curtas e separe ideias com quebras de linha.
 
 Informações da loja:
 - Nome: GameZone Store
@@ -188,8 +190,15 @@ function adicionarMensagem(texto, tipo) {
 
     div.innerHTML = `
         <span class="msg-avatar">${avatar}</span>
-        <div class="msg-balao">${texto}</div>
+        <div class="msg-balao"></div>
     `;
+
+    let balao = div.querySelector(".msg-balao");
+    if (tipo === "bot") {
+        balao.innerHTML = formatarTextoBot(texto);
+    } else {
+        balao.textContent = texto;
+    }
 
     chatBox.appendChild(div);
 
@@ -197,6 +206,23 @@ function adicionarMensagem(texto, tipo) {
     chatBox.scrollTop = chatBox.scrollHeight;
 
     return div;
+}
+
+function escaparHTML(texto) {
+    let div = document.createElement("div");
+    div.textContent = texto;
+    return div.innerHTML;
+}
+
+function formatarTextoBot(texto) {
+    return escaparHTML(texto)
+        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+        .replace(/&lt;strong&gt;/g, "<strong>")
+        .replace(/&lt;\/strong&gt;/g, "</strong>")
+        .replace(/&lt;br\s*\/?&gt;/gi, "<br>")
+        .replace(/\n{3,}/g, "\n\n")
+        .replace(/\n\n/g, "<br><br>")
+        .replace(/\n/g, "<br>");
 }
 
 // ---- FUNÇÃO: INDICADOR DE DIGITANDO ----
