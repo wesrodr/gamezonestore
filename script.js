@@ -74,7 +74,7 @@ function enviarFormulario(evento) {
 const GEMINI_API_KEY = "AIzaSyBzoAWvK5DLGnJPY9F_woxQDTvbRAJD5P0"; // <-- INSIRA SUA API KEY AQUI
 
 // Modelo Gemini utilizado
-const GEMINI_MODEL = "gemini-1.5-flash";
+const GEMINI_MODEL = "gemini-flash-latest";
 
 // Contexto da loja enviado ao Gemini para personalizar as respostas
 const CONTEXTO_LOJA = `
