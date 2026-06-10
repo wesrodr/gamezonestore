@@ -83,6 +83,8 @@ Responda sempre de forma amigável, direta e use emojis relacionados a games.
 Limite suas respostas a 3 parágrafos no máximo.
 Não use Markdown como **negrito**, listas com asterisco ou títulos.
 Escreva frases curtas e separe ideias com quebras de linha.
+Cumprimente apenas na primeira resposta da conversa ou quando o usuário mandar somente uma saudação.
+Nas demais mensagens, responda direto ao que foi perguntado.
 
 Informações da loja:
 - Nome: GameZone Store
@@ -117,6 +119,7 @@ let chatFechar  = document.getElementById("chat-fechar");
 let chatEnviar  = document.getElementById("chat-enviar");
 let chatInput   = document.getElementById("chat-input");
 let chatBox     = document.getElementById("chat-box");
+let totalMensagensUsuario = 0;
 
 let iconeAberto  = document.querySelector(".chat-icone-aberto");
 let iconeFechado = document.querySelector(".chat-icone-fechado");
@@ -159,6 +162,9 @@ function enviarMensagem() {
 
     if (texto === "") return;
 
+    let primeiraMensagem = totalMensagensUsuario === 0;
+    totalMensagensUsuario++;
+
     // Exibe a mensagem do usuário no chat
     adicionarMensagem(texto, "usuario");
     chatInput.value = "";
@@ -169,7 +175,7 @@ function enviarMensagem() {
     // Decide se usa IA (Gemini API) ou respostas locais
     if (GEMINI_API_KEY !== "") {
         // Usa a API Gemini com IA real
-        chamarGemini(texto, digitando);
+        chamarGemini(texto, digitando, primeiraMensagem);
     } else {
         // Usa as respostas automáticas programadas
         setTimeout(function () {
@@ -239,7 +245,7 @@ function adicionarDigitando() {
 // Esta função envia a mensagem do usuário para a IA do Google e retorna a resposta.
 // Para funcionar, é necessário ter uma API Key válida inserida em GEMINI_API_KEY.
 
-async function chamarGemini(mensagemUsuario, elementoDigitando) {
+async function chamarGemini(mensagemUsuario, elementoDigitando, primeiraMensagem) {
 
     // URL da API do Gemini
     let url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
@@ -251,7 +257,10 @@ async function chamarGemini(mensagemUsuario, elementoDigitando) {
                 parts: [
                     {
                         // Envia o contexto da loja + a mensagem do usuário
-                        text: CONTEXTO_LOJA + "\n\nMensagem do usuário: " + mensagemUsuario
+                        text: CONTEXTO_LOJA
+                            + "\n\nEstado da conversa: "
+                            + (primeiraMensagem ? "primeira mensagem do usuário." : "conversa em andamento. Não comece com olá, oi, salve ou boas-vindas.")
+                            + "\n\nMensagem do usuário: " + mensagemUsuario
                     }
                 ]
             }
@@ -303,7 +312,7 @@ function responderLocal(texto) {
     // ---- Respostas por palavras-chave ----
 
     // Saudações
-    if (contem(palavras, ["oi", "ola", "hello", "hey", "bom", "boa"])) {
+    if (palavras.length <= 3 && contem(palavras, ["oi", "ola", "hello", "hey", "bom", "boa"])) {
         return "Olá! 👋 Seja bem-vindo(a) à <strong>GameZone Store</strong>! Como posso te ajudar hoje? Quer conhecer nossos produtos, ver ofertas ou tirar alguma dúvida? 🎮";
     }
 
