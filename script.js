@@ -201,7 +201,12 @@ function adicionarMensagem(texto, tipo) {
 
     let balao = div.querySelector(".msg-balao");
     if (tipo === "bot") {
-        balao.innerHTML = formatarTextoBot(texto);
+        try {
+            balao.innerHTML = formatarTextoBot(texto);
+        } catch (erro) {
+            console.error("Erro ao formatar mensagem do bot:", erro);
+            balao.textContent = texto;
+        }
     } else {
         balao.textContent = texto;
     }
@@ -221,9 +226,11 @@ function escaparHTML(texto) {
 }
 
 function formatarTextoBot(texto) {
-    return escaparHTML(texto)
+    let textoSeguro = escaparHTML(String(texto));
+
+    return textoSeguro
         .replace(
-            /(https?:\/\/[^\s<]+)/g,
+            /(https?:\/\/[^\s<>"']+)/g,
             '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
         )
         .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
@@ -284,11 +291,18 @@ async function chamarGemini(mensagemUsuario, elementoDigitando, primeiraMensagem
         // Remove o indicador de digitando
         elementoDigitando.remove();
 
+        if (!resposta.ok) {
+            console.error("Erro retornado pela API Gemini:", dados);
+            adicionarMensagem("Tive um problema ao consultar a IA agora. Confira a chave da API e tente novamente.", "bot");
+            return;
+        }
+
         // Extrai o texto da resposta da IA
-        if (dados.candidates && dados.candidates[0]) {
+        if (dados.candidates && dados.candidates[0] && dados.candidates[0].content && dados.candidates[0].content.parts && dados.candidates[0].content.parts[0]) {
             let textoResposta = dados.candidates[0].content.parts[0].text;
             adicionarMensagem(textoResposta, "bot");
         } else {
+            console.error("Resposta inesperada da API Gemini:", dados);
             adicionarMensagem("Desculpe, tive um problema ao processar sua mensagem. Tente novamente! 😅", "bot");
         }
 
