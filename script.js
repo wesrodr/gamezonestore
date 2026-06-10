@@ -75,7 +75,6 @@ const GEMINI_API_KEY = "AIzaSyBzoAWvK5DLGnJPY9F_woxQDTvbRAJD5P0"; // <-- INSIRA 
 
 // Modelo Gemini utilizado
 const GEMINI_MODEL = "gemini-flash-latest";
-const GEMINI_TIMEOUT_MS = 30000;
 
 // Contexto da loja enviado ao Gemini para personalizar as respostas
 const CONTEXTO_LOJA = `
@@ -261,10 +260,6 @@ async function chamarGemini(mensagemUsuario, elementoDigitando, primeiraMensagem
 
     // URL da API do Gemini
     let url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
-    let controlador = new AbortController();
-    let timeoutId = setTimeout(function () {
-        controlador.abort();
-    }, GEMINI_TIMEOUT_MS);
 
     // Corpo da requisição enviado ao Gemini
     let corpo = {
@@ -288,8 +283,7 @@ async function chamarGemini(mensagemUsuario, elementoDigitando, primeiraMensagem
         let resposta = await fetch(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(corpo),
-            signal: controlador.signal
+            body: JSON.stringify(corpo)
         });
 
         let dados = await resposta.json();
@@ -312,13 +306,8 @@ async function chamarGemini(mensagemUsuario, elementoDigitando, primeiraMensagem
     } catch (erro) {
         // Em caso de erro na requisição
         console.error("Erro ao chamar a API Gemini:", erro);
-        if (erro.name === "AbortError") {
-            adicionarMensagem("A API do Gemini demorou mais de 30 segundos para responder. Tente enviar a mensagem novamente.", "bot");
-        } else {
-            adicionarMensagem("Ops! Não consegui me conectar à API do Gemini agora. Veja o console para mais detalhes.", "bot");
-        }
+        adicionarMensagem("Ops! Não consegui me conectar à API do Gemini agora. Veja o console para mais detalhes.", "bot");
     } finally {
-        clearTimeout(timeoutId);
         if (elementoDigitando && elementoDigitando.isConnected) {
             elementoDigitando.remove();
         }
