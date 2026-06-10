@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameZone Store | Equipamentos Gamers</title>
+
+    <!-- Google Fonts: Orbitron (display gamer) + Rajdhani (corpo) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+
+    <!-- ===================== CABEÇALHO ===================== -->
+    <header class="cabecalho" id="topo">
+        <div class="cabecalho-inner">
+
+            <!-- Logo da loja -->
+            <div class="logo">
+                <img src="logo.png" alt="GameZone Store" class="logo-imagem">
+            </div>
+
+            <!-- Menu de navegação principal -->
+            <nav class="nav-principal">
+                <ul>
+                    <li><a href="#inicio">Início</a></li>
+                    <li><a href="#sobre">Sobre</a></li>
+                    <li><a href="#produtos">Produtos</a></li>
+                    <li><a href="#ofertas">Ofertas</a></li>
+                    <li><a href="#contato">Contato</a></li>
+                </ul>
+            </nav>
+
+            <!-- Botão hambúrguer para mobile -->
+            <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+        </div>
+    </header>
+
+    <!-- ===================== SEÇÃO INÍCIO / HERO ===================== -->
+    <section id="inicio" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <p class="hero-badge">🎮 Bem-vindo à GameZone Store</p>
+            <h1 class="hero-titulo">
+                Eleve seu <span class="neon">setup gamer</span><br>para o próximo nível
+            </h1>
+            <p class="hero-subtitulo">
+                Produtos gamers de alta performance para jogadores que buscam<br>
+                qualidade, conforto e desempenho máximo.
+            </p>
+            <div class="hero-botoes">
+                <a href="#produtos" class="btn btn-primario">🛒 Ver Produtos</a>
+                <a href="#ofertas" class="btn btn-secundario">🔥 Ver Ofertas</a>
+            </div>
+        </div>
+
+        <!-- Decoração geométrica de fundo -->
+        <div class="hero-deco">
+            <div class="deco-circulo c1"></div>
+            <div class="deco-circulo c2"></div>
+            <div class="deco-linha l1"></div>
+            <div class="deco-linha l2"></div>
+        </div>
+    </section>
+
+    <!-- ===================== SEÇÃO SOBRE ===================== -->
+    <section id="sobre" class="secao sobre">
+        <div class="container">
+            <div class="sobre-texto">
+                <h2 class="secao-titulo">Sobre a <span class="destaque">GameZone Store</span></h2>
+                <p>
+                    A <strong>GameZone Store</strong> é uma loja gamer criada para oferecer equipamentos e acessórios
+                    de alta qualidade para jogadores casuais, streamers e gamers competitivos.
+                </p>
+                <p>
+                    Sabemos que escolher o equipamento certo pode ser difícil. Por isso, nossa plataforma combina
+                    um catálogo completo de produtos com um <strong>assistente inteligente</strong> que ajuda
+                    você a montar o setup ideal para o seu perfil e orçamento.
+                </p>
+                <p>
+                    Seja para seu primeiro setup ou para upgrades profissionais, a GameZone Store é o lugar certo.
+                </p>
+            </div>
+
+            <div class="sobre-cards">
+                <div class="info-card">
+                    <span class="info-icone">🚀</span>
+                    <h3>Alta Performance</h3>
+                    <p>Produtos selecionados para máximo desempenho</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-icone">💬</span>
+                    <h3>Suporte com IA</h3>
+                    <p>Chatbot inteligente para te ajudar a escolher</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-icone">🏆</span>
+                    <h3>Melhor Preço</h3>
+                    <p>Qualidade garantida com preço justo</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-icone">🚚</span>
+                    <h3>Entrega Rápida</h3>
+                    <p>Frete expresso para todo o Brasil</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== SEÇÃO PRODUTOS ===================== -->
+    <section id="produtos" class="secao produtos">
+        <div class="container">
+            <h2 class="secao-titulo text-center">Nossos <span class="destaque">Produtos</span></h2>
+            <p class="secao-subtitulo text-center">Equipamentos top de linha para o seu setup perfeito</p>
+
+            <!-- Grid de cards de produtos -->
+            <div class="produtos-grid">
+
+                <div class="produto-card">
+                    <div class="produto-imagem">
+                        <img src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=600&q=80" alt="Teclado mecânico RGB iluminado" loading="lazy">
+                    </div>
+                    <div class="produto-badge">Mais Vendido</div>
+                    <h3>Teclado Mecânico RGB</h3>
+                    <p>Switches mecânicos, iluminação RGB 16M cores e alta durabilidade para jogos competitivos.</p>
+                    <div class="produto-preco">
+                        <span class="preco-original">R$ 329,90</span>
+                        <span class="preco-atual">R$ 249,90</span>
+                    </div>
+                    <button class="btn btn-comprar">🛒 Comprar</button>
+                </div>
+
+                <div class="produto-card">
+                    <div class="produto-imagem">
+                        <img src="https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format&fit=crop&w=600&q=80" alt="Mouse gamer preto com iluminação RGB" loading="lazy">
+                    </div>
+                    <h3>Mouse Gamer 12000 DPI</h3>
+                    <p>Sensor óptico de 12.000 DPI, 7 botões programáveis e design ergonômico anti-suor.</p>
+                    <div class="produto-preco">
+                        <span class="preco-atual">R$ 189,90</span>
+                    </div>
+                    <button class="btn btn-comprar">🛒 Comprar</button>
+                </div>
+
+                <div class="produto-card">
+                    <div class="produto-imagem">
+                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=80" alt="Headset gamer preto sobre mesa" loading="lazy">
+                    </div>
+                    <div class="produto-badge badge-novo">Novo</div>
+                    <h3>Headset Gamer 7.1</h3>
+                    <p>Som surround 7.1 virtual, microfone com cancelamento de ruído e almofadas de memória.</p>
+                    <div class="produto-preco">
+                        <span class="preco-atual">R$ 299,90</span>
+                    </div>
+                    <button class="btn btn-comprar">🛒 Comprar</button>
+                </div>
+
+                <div class="produto-card">
+                    <div class="produto-imagem">
+                        <img src="https://images.unsplash.com/photo-1598550476439-6847785fcea6?auto=format&fit=crop&w=600&q=80" alt="Cadeira gamer em setup com computador" loading="lazy">
+                    </div>
+                    <h3>Cadeira Gamer Ergonômica</h3>
+                    <p>Estrutura em aço, encosto reclinável até 180°, apoio lombar e almofada cervical inclusos.</p>
+                    <div class="produto-preco">
+                        <span class="preco-original">R$ 1.299,90</span>
+                        <span class="preco-atual">R$ 999,90</span>
+                    </div>
+                    <button class="btn btn-comprar">🛒 Comprar</button>
+                </div>
+
+                <div class="produto-card">
+                    <div class="produto-imagem">
+                        <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=600&q=80" alt="Monitor gamer em uma mesa de setup" loading="lazy">
+                    </div>
+                    <div class="produto-badge">Mais Vendido</div>
+                    <h3>Monitor Gamer 144Hz</h3>
+                    <p>Tela Full HD 24", taxa de atualização 144Hz, 1ms de resposta e AMD FreeSync.</p>
+                    <div class="produto-preco">
+                        <span class="preco-original">R$ 1.599,90</span>
+                        <span class="preco-atual">R$ 1.299,90</span>
+                    </div>
+                    <button class="btn btn-comprar">🛒 Comprar</button>
+                </div>
+
+                <div class="produto-card">
+                    <div class="produto-imagem">
+                        <img src="https://images.unsplash.com/photo-1600080972464-8e5f35f63d08?auto=format&fit=crop&w=600&q=80" alt="Controle bluetooth para jogos" loading="lazy">
+                    </div>
+                    <h3>Controle Bluetooth</h3>
+                    <p>Compatível com PC e console, vibração dupla, bateria de longa duração e gatilhos analógicos.</p>
+                    <div class="produto-preco">
+                        <span class="preco-atual">R$ 219,90</span>
+                    </div>
+                    <button class="btn btn-comprar">🛒 Comprar</button>
+                </div>
+
+                <div class="produto-card">
+                    <div class="produto-imagem">
+                        <img src="https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=600&q=80" alt="Placa de vídeo gamer com iluminação" loading="lazy">
+                    </div>
+                    <div class="produto-badge badge-novo">Novo</div>
+                    <h3>Placa de Vídeo Gamer</h3>
+                    <p>8GB GDDR6, suporte a Ray Tracing, DLSS 3.0 e compatível com jogos 4K ultra.</p>
+                    <div class="produto-preco">
+                        <span class="preco-atual">R$ 3.499,90</span>
+                    </div>
+                    <button class="btn btn-comprar">🛒 Comprar</button>
+                </div>
+
+                <div class="produto-card">
+                    <div class="produto-imagem">
+                        <img src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&w=600&q=80" alt="Console de videogame de última geração" loading="lazy">
+                    </div>
+                    <h3>Console de Última Geração</h3>
+                    <p>Desempenho 4K a 120fps, SSD ultrarrápido, retrocompatível com jogos anteriores.</p>
+                    <div class="produto-preco">
+                        <span class="preco-original">R$ 4.299,90</span>
+                        <span class="preco-atual">R$ 3.899,90</span>
+                    </div>
+                    <button class="btn btn-comprar">🛒 Comprar</button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== SEÇÃO OFERTAS ===================== -->
+    <section id="ofertas" class="secao ofertas">
+        <div class="container">
+            <h2 class="secao-titulo text-center">🔥 <span class="destaque">Ofertas</span> Especiais</h2>
+            <p class="secao-subtitulo text-center">Combos e kits com preço especial por tempo limitado</p>
+
+            <!-- Banner de frete grátis -->
+            <div class="banner-frete">
+                🚚 <strong>FRETE GRÁTIS</strong> em compras acima de <strong>R$ 500,00</strong> para todo o Brasil!
+            </div>
+
+            <!-- Cards de ofertas / combos -->
+            <div class="ofertas-grid">
+
+                <div class="oferta-card">
+                    <div class="oferta-tag">⌨️🖱️</div>
+                    <h3>Combo Teclado + Mouse</h3>
+                    <p>Teclado Mecânico RGB + Mouse Gamer 12.000 DPI. A dupla perfeita para quem quer performance completa sem gastar muito.</p>
+                    <div class="oferta-preco">
+                        <span class="de">De R$ 439,80</span>
+                        <span class="por">Por R$ 369,90</span>
+                        <span class="economia">Economia de R$ 69,90</span>
+                    </div>
+                    <button class="btn btn-primario">Aproveitar Oferta</button>
+                </div>
+
+                <div class="oferta-card destaque-card">
+                    <div class="oferta-label">🌟 Mais Popular</div>
+                    <div class="oferta-tag">🎙️📷</div>
+                    <h3>Kit Streamer Pro</h3>
+                    <p>Headset 7.1 + Controle Bluetooth + Mouse Gamer. Tudo que você precisa para começar sua carreira de streamer.</p>
+                    <div class="oferta-preco">
+                        <span class="de">De R$ 709,70</span>
+                        <span class="por">Por R$ 579,90</span>
+                        <span class="economia">Economia de R$ 129,80</span>
+                    </div>
+                    <button class="btn btn-primario">Aproveitar Oferta</button>
+                </div>
+
+                <div class="oferta-card">
+                    <div class="oferta-tag">🎮💻</div>
+                    <h3>Setup Iniciante</h3>
+                    <p>Mouse Gamer + Teclado Mecânico + Headset 7.1 + Controle Bluetooth. Comece sua jornada gamer com estilo.</p>
+                    <div class="oferta-preco">
+                        <span class="de">De R$ 959,60</span>
+                        <span class="por">Por R$ 799,90</span>
+                        <span class="economia">Economia de R$ 159,70</span>
+                    </div>
+                    <button class="btn btn-primario">Aproveitar Oferta</button>
+                </div>
+
+                <div class="oferta-card">
+                    <div class="oferta-tag">🏆⚡</div>
+                    <h3>Setup Competitivo</h3>
+                    <p>Monitor 144Hz + Teclado + Mouse + Headset + Cadeira Gamer. O pacote completo para quem joga pra vencer.</p>
+                    <div class="oferta-preco">
+                        <span class="de">De R$ 2.039,60</span>
+                        <span class="por">Por R$ 1.699,90</span>
+                        <span class="economia">Economia de R$ 339,70</span>
+                    </div>
+                    <button class="btn btn-primario">Aproveitar Oferta</button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== SEÇÃO CONTATO ===================== -->
+    <section id="contato" class="secao contato">
+        <div class="container">
+            <h2 class="secao-titulo text-center">Entre em <span class="destaque">Contato</span></h2>
+            <p class="secao-subtitulo text-center">Estamos prontos para te ajudar a montar o setup perfeito</p>
+
+            <div class="contato-wrapper">
+
+                <!-- Informações de contato -->
+                <div class="contato-info">
+                    <h3>Fale Conosco</h3>
+                    <ul class="contato-lista">
+                        <li>📧 contato@gamezonestore.com</li>
+                        <li>📱 (86) 9 9999-9999</li>
+                        <li>🕐 Seg–Sex: 8h às 20h</li>
+                        <li>📍 Teresina – PI, Brasil</li>
+                    </ul>
+
+                    <div class="redes-sociais">
+                        <h4>Redes Sociais</h4>
+                        <div class="redes-links">
+                            <a href="#" class="rede-link">📘 Facebook</a>
+                            <a href="#" class="rede-link">📸 Instagram</a>
+                            <a href="#" class="rede-link">🐦 Twitter/X</a>
+                            <a href="#" class="rede-link">📺 YouTube</a>
+                            <a href="#" class="rede-link">💜 Twitch</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formulário de contato -->
+                <form class="contato-form" onsubmit="enviarFormulario(event)">
+                    <div class="form-grupo">
+                        <label for="nome">Nome Completo</label>
+                        <input type="text" id="nome" name="nome" placeholder="Seu nome" required>
+                    </div>
+                    <div class="form-grupo">
+                        <label for="email">E-mail</label>
+                        <input type="email" id="email" name="email" placeholder="seuemail@email.com" required>
+                    </div>
+                    <div class="form-grupo">
+                        <label for="produto">Produto de Interesse</label>
+                        <select id="produto" name="produto">
+                            <option value="">Selecione um produto...</option>
+                            <option value="teclado">Teclado Mecânico RGB</option>
+                            <option value="mouse">Mouse Gamer 12000 DPI</option>
+                            <option value="headset">Headset Gamer 7.1</option>
+                            <option value="cadeira">Cadeira Gamer Ergonômica</option>
+                            <option value="monitor">Monitor Gamer 144Hz</option>
+                            <option value="controle">Controle Bluetooth</option>
+                            <option value="placa">Placa de Vídeo Gamer</option>
+                            <option value="console">Console de Última Geração</option>
+                            <option value="combo">Combos / Kits</option>
+                        </select>
+                    </div>
+                    <div class="form-grupo">
+                        <label for="mensagem">Mensagem</label>
+                        <textarea id="mensagem" name="mensagem" rows="4" placeholder="Conte-nos como podemos te ajudar..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primario btn-full">📨 Enviar Mensagem</button>
+                </form>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== RODAPÉ ===================== -->
+    <footer class="rodape">
+        <div class="rodape-inner">
+
+            <div class="rodape-col">
+                <div class="logo">
+                    <span class="logo-icone">⚡</span>
+                    <span class="logo-texto">Game<span class="destaque">Zone</span> Store</span>
+                </div>
+                <p class="rodape-desc">A loja gamer perfeita para jogadores que buscam qualidade, performance e suporte especializado.</p>
+                <p class="rodape-email">📧 contato@gamezonestore.com</p>
+            </div>
+
+            <div class="rodape-col">
+                <h4>Menu Rápido</h4>
+                <ul class="rodape-links">
+                    <li><a href="#inicio">Início</a></li>
+                    <li><a href="#sobre">Sobre</a></li>
+                    <li><a href="#produtos">Produtos</a></li>
+                    <li><a href="#ofertas">Ofertas</a></li>
+                    <li><a href="#contato">Contato</a></li>
+                </ul>
+            </div>
+
+            <div class="rodape-col">
+                <h4>Produtos</h4>
+                <ul class="rodape-links">
+                    <li><a href="#produtos">Teclados Mecânicos</a></li>
+                    <li><a href="#produtos">Mouses Gamers</a></li>
+                    <li><a href="#produtos">Headsets</a></li>
+                    <li><a href="#produtos">Cadeiras Gamers</a></li>
+                    <li><a href="#produtos">Monitores</a></li>
+                </ul>
+            </div>
+
+            <div class="rodape-col">
+                <h4>Redes Sociais</h4>
+                <ul class="rodape-links">
+                    <li><a href="#">📘 Facebook</a></li>
+                    <li><a href="#">📸 Instagram</a></li>
+                    <li><a href="#">🐦 Twitter/X</a></li>
+                    <li><a href="#">📺 YouTube</a></li>
+                    <li><a href="#">💜 Twitch</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="rodape-bottom">
+            <p>© 2026 GameZone Store. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- ===================== CHATBOT ===================== -->
+
+    <!-- Botão para abrir/fechar o chatbot -->
+    <button id="chat-toggle" class="chat-toggle" title="Assistente GameZone">
+        <span class="chat-icone-fechado">🎮</span>
+        <span class="chat-icone-aberto hidden">✕</span>
+    </button>
+
+    <!-- Widget do Chatbot -->
+    <div id="chat-widget" class="chat-widget hidden">
+
+        <div class="chat-header">
+            <div class="chat-header-info">
+                <span class="chat-avatar">🤖</span>
+                <div>
+                    <p class="chat-nome">GameBot</p>
+                    <p class="chat-status">● Online</p>
+                </div>
+            </div>
+            <button id="chat-fechar" class="chat-fechar" title="Fechar">✕</button>
+        </div>
+
+        <!-- Área de mensagens do chat -->
+        <div id="chat-box" class="chat-box">
+            <!-- Mensagem inicial do bot -->
+            <div class="mensagem bot">
+                <span class="msg-avatar">🤖</span>
+                <div class="msg-balao">
+                    Olá! 👋 Sou o <strong>GameBot</strong>, assistente da GameZone Store!<br><br>
+                    Posso te ajudar a encontrar os melhores produtos, tirar dúvidas sobre preços, ofertas e como comprar. 🎮
+                </div>
+            </div>
+        </div>
+
+        <!-- Campo de digitação -->
+        <div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Digite sua dúvida..." autocomplete="off">
+            <button id="chat-enviar" title="Enviar">➤</button>
+        </div>
+
+    </div>
+
+</body>
+</html>
