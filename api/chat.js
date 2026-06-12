@@ -1,4 +1,6 @@
 const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+const GROQ_MODEL = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
+const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || "openai/gpt-4o-mini";
 
 const CONTEXTO_LOJA = `
 Voce e o GameBot, assistente virtual da GameZone Store, uma loja gamer online.
@@ -43,17 +45,131 @@ function lerBody(req) {
     return req.body || {};
 }
 
-module.exports = async function handler(req, res) {
-    if (req.method !== "POST") {
-        return res.status(405).json({ error: { message: "Metodo nao permitido." } });
-    }
-
+async function chamarGemini(prompt) {
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-        return res.status(500).json({
-            error: { message: "GEMINI_API_KEY nao foi configurada nas variaveis de ambiente da Vercel." }
-        });
+        throw new Error("GEMINI_API_KEY nao configurada.");
+    }
+
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
+    const resposta = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            contents: [
+                {
+                    parts: [{ text: prompt }]
+                }
+            ]
+        })
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+        const mensagem = dados.error && dados.error.message
+            ? dados.error.message
+            : "Erro retornado pela API Gemini.";
+
+        throw new Error(`Gemini ${resposta.status}: ${mensagem}`);
+    }
+
+    const texto = dados.candidates
+        && dados.candidates[0]
+        && dados.candidates[0].content
+        && dados.candidates[0].content.parts
+        && dados.candidates[0].content.parts[0]
+        && dados.candidates[0].content.parts[0].text;
+
+    if (!texto) {
+        throw new Error("Gemini respondeu em um formato inesperado.");
+    }
+
+    return texto;
+}
+
+async function chamarChatCompativelOpenAI({ nome, apiKey, url, model, prompt, headersExtras }) {
+    if (!apiKey) {
+        throw new Error(`${nome}: chave de API nao configurada.`);
+    }
+
+    const resposta = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${apiKey}`,
+            ...(headersExtras || {})
+        },
+        body: JSON.stringify({
+            model,
+            temperature: 0.7,
+            max_tokens: 450,
+            messages: [
+                { role: "system", content: CONTEXTO_LOJA },
+                { role: "user", content: prompt }
+            ]
+        })
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+        const mensagem = dados.error && dados.error.message
+            ? dados.error.message
+            : `Erro retornado pela API ${nome}.`;
+
+        throw new Error(`${nome} ${resposta.status}: ${mensagem}`);
+    }
+
+    const texto = dados.choices
+        && dados.choices[0]
+        && dados.choices[0].message
+        && dados.choices[0].message.content;
+
+    if (!texto) {
+        throw new Error(`${nome} respondeu em um formato inesperado.`);
+    }
+
+    return texto;
+}
+
+function criarProvedores(prompt) {
+    return [
+        {
+            nome: "Gemini",
+            chamar: () => chamarGemini(prompt)
+        },
+        {
+            nome: "Groq",
+            chamar: () => chamarChatCompativelOpenAI({
+                nome: "Groq",
+                apiKey: process.env.GROQ_API_KEY,
+                url: "https://api.groq.com/openai/v1/chat/completions",
+                model: GROQ_MODEL,
+                prompt
+            })
+        },
+        {
+            nome: "OpenRouter",
+            chamar: () => chamarChatCompativelOpenAI({
+                nome: "OpenRouter",
+                apiKey: process.env.OPENROUTER_API_KEY,
+                url: "https://openrouter.ai/api/v1/chat/completions",
+                model: OPENROUTER_MODEL,
+                prompt,
+                headersExtras: {
+                    "HTTP-Referer": process.env.SITE_URL || "https://gamezonestore.vercel.app",
+                    "X-Title": "GameZone Store"
+                }
+            })
+        }
+    ];
+}
+
+module.exports = async function handler(req, res) {
+    if (req.method !== "POST") {
+        return res.status(405).json({ error: { message: "Metodo nao permitido." } });
     }
 
     let body;
@@ -75,51 +191,25 @@ module.exports = async function handler(req, res) {
         + (primeiraMensagem ? "primeira mensagem do usuario." : "conversa em andamento. Nao comece com ola, oi, salve ou boas-vindas.")
         + "\n\nMensagem do usuario: " + mensagem;
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
+    const erros = [];
 
-    try {
-        const respostaGemini = await fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                contents: [
-                    {
-                        parts: [{ text: prompt }]
-                    }
-                ]
-            })
-        });
-
-        const dados = await respostaGemini.json();
-
-        if (!respostaGemini.ok) {
-            return res.status(respostaGemini.status).json({
-                error: {
-                    message: dados.error && dados.error.message
-                        ? dados.error.message
-                        : "Erro retornado pela API Gemini."
-                }
+    for (const provedor of criarProvedores(prompt)) {
+        try {
+            const texto = await provedor.chamar();
+            return res.status(200).json({
+                resposta: texto,
+                provedor: provedor.nome
             });
+        } catch (erro) {
+            erros.push(`${provedor.nome}: ${erro.message}`);
+            console.error(`Falha no provedor ${provedor.nome}:`, erro.message);
         }
-
-        const texto = dados.candidates
-            && dados.candidates[0]
-            && dados.candidates[0].content
-            && dados.candidates[0].content.parts
-            && dados.candidates[0].content.parts[0]
-            && dados.candidates[0].content.parts[0].text;
-
-        if (!texto) {
-            return res.status(502).json({
-                error: { message: "A API Gemini respondeu em um formato inesperado." }
-            });
-        }
-
-        return res.status(200).json({ resposta: texto });
-    } catch (erro) {
-        console.error("Erro ao chamar Gemini:", erro);
-        return res.status(500).json({
-            error: { message: "Falha ao conectar com a API Gemini." }
-        });
     }
+
+    return res.status(502).json({
+        error: {
+            message: "Nao foi possivel gerar uma resposta agora. Tente novamente em alguns instantes.",
+            details: erros
+        }
+    });
 };

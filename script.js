@@ -234,12 +234,12 @@ async function chamarGemini(mensagemUsuario, elementoDigitando, primeiraMensagem
                 ? dados.error.message
                 : "Erro desconhecido retornado pela API.";
 
-            console.error("Erro retornado pela API Gemini:", {
+            console.error("Erro retornado pela API do chatbot:", {
                 status: resposta.status,
                 statusText: resposta.statusText,
                 detalhes: dados
             });
-            adicionarMensagem("A API do Gemini respondeu com erro " + resposta.status + ": " + mensagemErro, "bot");
+            adicionarMensagem("O assistente respondeu com erro " + resposta.status + ": " + mensagemErro, "bot");
             return;
         }
 
@@ -253,8 +253,8 @@ async function chamarGemini(mensagemUsuario, elementoDigitando, primeiraMensagem
 
     } catch (erro) {
         // Em caso de erro na requisição
-        console.error("Erro ao chamar a API Gemini:", erro);
-        adicionarMensagem("Ops! Não consegui me conectar à API do Gemini agora. Veja o console para mais detalhes.", "bot");
+        console.error("Erro ao chamar a API do chatbot:", erro);
+        adicionarMensagem("Ops! Não consegui me conectar ao assistente agora. Tente novamente em alguns instantes.", "bot");
     } finally {
         if (elementoDigitando && elementoDigitando.isConnected) {
             elementoDigitando.remove();
