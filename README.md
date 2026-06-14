@@ -1,142 +1,125 @@
-# 🎮 GameZone Store
+# GameZone Store
 
-> Trabalho Final — Disciplina: Desenvolvimento Web para IA
+> Trabalho final da disciplina de Desenvolvimento Web para IA.
 
----
+A **GameZone Store** é uma loja gamer fictícia com catálogo de produtos, ofertas, formulário de contato e um assistente virtual integrado a serviços de inteligência artificial.
 
-## 📌 Nome do Projeto
+## Funcionalidades
 
-**GameZone Store** — Loja Gamer Online com Chatbot Inteligente
+- Navegação por âncoras entre as seções da página
+- Menu responsivo para dispositivos móveis
+- Catálogo com oito produtos e imagens locais
+- Área de ofertas com quatro combos
+- Simulação de adição de produtos
+- Formulário de contato com validação do navegador
+- Chat flutuante com indicador de digitação
+- Integração serverless com Gemini, Groq e OpenRouter
+- Layout responsivo para desktop, tablet e celular
+- Animações, efeitos de hover e cabeçalho reativo ao scroll
 
----
+## Tecnologias
 
-## 🎯 Objetivo do Site
+| Tecnologia | Uso |
+| --- | --- |
+| HTML5 | Estrutura e conteúdo da página |
+| CSS3 | Layout, animações e responsividade |
+| JavaScript | Interações, formulário e chatbot |
+| Vercel Functions | Endpoint seguro do chatbot |
+| Gemini API | Primeiro provedor de IA |
+| Groq API | Segundo provedor de IA |
+| OpenRouter API | Terceiro provedor de IA |
+| Google Fonts | Fontes Orbitron e Rajdhani |
 
-Criar uma plataforma de apresentação e venda de produtos gamers com visual moderno, tecnológico e atrativo, simulando uma loja virtual completa. O site serve como entrega do trabalho final da disciplina de Desenvolvimento Web para IA.
+## Estrutura do projeto
 
----
-
-## 🕹️ Tema Escolhido
-
-**Loja Gamer** — A GameZone Store é uma loja fictícia especializada em equipamentos e acessórios para jogadores casuais, streamers e gamers competitivos.
-
----
-
-## ❗ Problema que o Site Resolve
-
-Muitos jogadores têm dificuldade em escolher os equipamentos certos para seu perfil e orçamento. A GameZone Store resolve isso com:
-
-- Um catálogo organizado por categoria e preço
-- Combos e kits pré-montados (Setup Iniciante, Kit Streamer, Setup Competitivo)
-- Um chatbot com IA capaz de recomendar produtos com base nas necessidades do usuário
-
----
-
-## 🛠️ Tecnologias Usadas
-
-| Tecnologia       | Uso                              |
-|------------------|----------------------------------|
-| HTML5            | Estrutura e semântica do site    |
-| CSS3             | Estilização e responsividade     |
-| JavaScript       | Interatividade e chatbot         |
-| Google Fonts     | Tipografia (Orbitron + Rajdhani) |
-| Gemini API       | Inteligência artificial (chatbot)|
-
----
-
-## 🗂️ Estrutura de Arquivos
-
+```text
+gamezonestore/
+├── api/
+│   └── chat.js          # Função serverless e integração com os provedores de IA
+├── assets/
+│   ├── cadeira.png
+│   ├── console.png
+│   ├── controle.png
+│   ├── fone.png
+│   ├── monitor.png
+│   ├── mouse.png
+│   ├── placa.png
+│   └── teclado.png      # Imagens dos produtos
+├── .gitignore           # Arquivos ignorados pelo Git
+├── index.html           # Estrutura da loja
+├── logo.png             # Logo utilizada no cabeçalho e no rodapé
+├── script.js            # Interações da interface e comunicação com /api/chat
+├── style.css            # Estilos, animações e media queries
+└── README.md            # Documentação do projeto
 ```
-gamezone-store/
-├── index.html      ← Estrutura HTML do site
-├── style.css       ← Estilos e responsividade
-├── script.js       ← Interatividade e chatbot
-└── README.md       ← Documentação do projeto
+
+## Como executar
+
+### Apenas a interface
+
+Abra o arquivo `index.html` no navegador ou utilize a extensão Live Server do VS Code.
+
+Nesse modo, a página, o menu, os produtos e o formulário funcionam normalmente. O chatbot com IA depende do endpoint `/api/chat` e, portanto, precisa ser executado em um ambiente compatível com Vercel Functions.
+
+### Projeto completo com o chatbot
+
+1. Instale a [Vercel CLI](https://vercel.com/docs/cli).
+2. Crie um arquivo `.env.local` na raiz do projeto.
+3. Configure pelo menos uma chave de API.
+4. Execute:
+
+```bash
+vercel dev
 ```
 
----
+5. Acesse o endereço local exibido no terminal, normalmente `http://localhost:3000`.
 
-## ▶️ Como Executar o Projeto
+Os arquivos `.env` e `.env.local` estão no `.gitignore` e não devem ser enviados ao repositório.
 
-1. Baixe ou clone os arquivos do projeto
-2. Abra o arquivo `index.html` no seu navegador
-3. O site funciona sem necessidade de servidor ou instalação
+## Configuração da IA
 
-> **Dica:** Use o Live Server do VS Code para melhor experiência de desenvolvimento.
+O front-end envia as mensagens para `POST /api/chat`. A função tenta os provedores nesta ordem:
 
----
+1. Gemini
+2. Groq
+3. OpenRouter
 
-## 🤖 Como Configurar o Chatbot com IA (Gemini)
+Se um provedor não estiver configurado ou retornar erro, a função tenta o próximo. É necessário configurar ao menos uma destas variáveis:
 
-### Modo 1 — Sem API (já funciona por padrão)
+```env
+GEMINI_API_KEY=sua_chave_gemini
+GROQ_API_KEY=sua_chave_groq
+OPENROUTER_API_KEY=sua_chave_openrouter
+```
 
-O chatbot já funciona com respostas automáticas baseadas em palavras-chave, sem precisar de nenhuma configuração.
+Os modelos possuem valores padrão, mas podem ser alterados:
 
-### Modo 2 — Com IA real (Gemini API)
+```env
+GEMINI_MODEL=gemini-2.5-flash
+GROQ_MODEL=llama-3.3-70b-versatile
+OPENROUTER_MODEL=openai/gpt-4o-mini
+SITE_URL=https://gamezonestore.vercel.app
+```
 
-Para ativar o chatbot com inteligência artificial do Google:
+As chaves ficam somente no ambiente da função serverless. Não coloque credenciais em `script.js`, `index.html` ou qualquer outro arquivo público.
 
-1. Acesse: https://aistudio.google.com/app/apikey
-2. Crie uma conta Google (se não tiver) e gere uma API Key gratuita
-3. Abra o arquivo `script.js`
-4. Localize a linha:
-   ```javascript
-   const GEMINI_API_KEY = ""; // <-- INSIRA SUA API KEY AQUI
-   ```
-5. Substitua `""` pela sua chave:
-   ```javascript
-   const GEMINI_API_KEY = "AIzaSy...suachaveaqui";
-   ```
-6. Salve o arquivo e recarregue o site
+## Implantação na Vercel
 
-O chatbot passará a usar o modelo **Gemini 1.5 Flash** com o contexto completo da loja.
+1. Importe o repositório na Vercel.
+2. Se necessário, selecione `gamezonestore` como diretório raiz do projeto.
+3. Cadastre as variáveis de ambiente em **Settings > Environment Variables**.
+4. Faça o deploy.
 
----
+A Vercel publica os arquivos estáticos e disponibiliza automaticamente `api/chat.js` como o endpoint `/api/chat`.
 
-## ✅ Funcionalidades do Site
+## Integrantes
 
-| Funcionalidade            | Descrição                                               |
-|---------------------------|----------------------------------------------------------|
-| Menu de Navegação         | 5 itens com âncoras para cada seção                     |
-| Seção Hero                | Área de entrada com título, subtítulo e botões de ação  |
-| Seção Sobre               | Apresentação da loja com cards informativos             |
-| Seção Produtos            | 8 produtos em grid (display:grid)                        |
-| Seção Ofertas             | 4 combos em flex (display:flex) com banner de frete     |
-| Seção Contato             | Formulário completo + informações e redes sociais       |
-| Rodapé                    | Links rápidos, categorias e redes sociais               |
-| Chatbot com IA            | Widget flutuante com Gemini API + fallback local        |
-| Responsividade            | Mobile, tablet e desktop via media queries              |
-| Menu Mobile               | Hambúrguer funcional para telas pequenas                |
-| Efeito Scroll             | Cabeçalho com fundo ao rolar a página                   |
-| Hover nos Cards           | Animações suaves nos produtos e ofertas                 |
+| Nome | 
+| WESLEY RUAN RODRIGUES DE PAULA | 
+| LUAN VITOR COSTA SILVA LOPES   | 
 
----
+## Observação
 
-## 👥 Integrantes do Grupo
-
-| Nome | Matrícula |
-|------|-----------|
-| *(Preencha aqui)* | *(Preencha aqui)* |
-| *(Preencha aqui)* | *(Preencha aqui)* |
-| *(Preencha aqui)* | *(Preencha aqui)* |
-
----
-
-## 📋 Requisitos Atendidos
-
-- [x] HTML semântico
-- [x] CSS organizado com variáveis
-- [x] Menu de navegação com ≥ 4 itens
-- [x] Âncoras funcionais para cada seção
-- [x] Cards com `display:grid` (Produtos)
-- [x] Cards com `display:flex` (Ofertas)
-- [x] Paleta de cores compatível com tema gamer
-- [x] Responsividade com media queries
-- [x] JavaScript separado em `script.js`
-- [x] Chatbot funcional com IA (Gemini API)
-- [x] Código comentado e organizado
-- [x] Sem erros no console do navegador
-
----
+Este projeto simula uma loja virtual para fins acadêmicos. Os botões de compra e o formulário exibem confirmações na interface, mas não processam pagamentos nem enviam dados para um banco de dados.
 
 © 2026 GameZone Store. Todos os direitos reservados.
