@@ -115,7 +115,7 @@ A Vercel publica os arquivos estáticos e disponibiliza automaticamente `api/cha
 ## Integrantes
 
 | Nome |   
-| WESLEY RUAN RODRIGUES DE PAULA | 
+| WESLEY RUAN RODRIGUES DE PAULA |  
 | LUAN VITOR COSTA SILVA LOPES   |   
 
 ## Observação
