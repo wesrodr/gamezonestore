@@ -35,6 +35,10 @@ Combos/Ofertas:
 - Setup Competitivo: R$ 1.699,90 (economia de R$ 339,70)
 
 Como comprar: navegue pelos produtos, clique em "Comprar" ou preencha o formulario de contato.
+
+Use o historico recente para entender referencias como "ele", "esse", "quero o anterior"
+e outras continuacoes. Quando o usuario confirmar que quer um item citado anteriormente,
+considere esse item como o produto de interesse e explique como concluir a compra.
 `;
 
 function lerBody(req) {
@@ -43,6 +47,34 @@ function lerBody(req) {
     }
 
     return req.body || {};
+}
+
+function normalizarHistorico(historico) {
+    if (!Array.isArray(historico)) {
+        return [];
+    }
+
+    return historico
+        .filter((item) => item && (item.role === "user" || item.role === "assistant"))
+        .map((item) => ({
+            role: item.role,
+            content: String(item.content || "").trim().slice(0, 1000)
+        }))
+        .filter((item) => item.content)
+        .slice(-12);
+}
+
+function montarConversa(historico, mensagem) {
+    const conversa = [...historico];
+    const ultimaMensagem = conversa[conversa.length - 1];
+
+    if (!ultimaMensagem || ultimaMensagem.role !== "user" || ultimaMensagem.content !== mensagem) {
+        conversa.push({ role: "user", content: mensagem });
+    }
+
+    return conversa
+        .map((item) => `${item.role === "assistant" ? "Assistente" : "Usuario"}: ${item.content}`)
+        .join("\n");
 }
 
 async function chamarGemini(prompt) {
@@ -181,6 +213,7 @@ module.exports = async function handler(req, res) {
 
     const mensagem = String(body.mensagem || "").trim();
     const primeiraMensagem = Boolean(body.primeiraMensagem);
+    const historico = normalizarHistorico(body.historico);
 
     if (!mensagem) {
         return res.status(400).json({ error: { message: "Mensagem vazia." } });
@@ -189,7 +222,9 @@ module.exports = async function handler(req, res) {
     const prompt = CONTEXTO_LOJA
         + "\n\nEstado da conversa: "
         + (primeiraMensagem ? "primeira mensagem do usuario." : "conversa em andamento. Nao comece com ola, oi, salve ou boas-vindas.")
-        + "\n\nMensagem do usuario: " + mensagem;
+        + "\n\nHistorico recente:\n"
+        + montarConversa(historico, mensagem)
+        + "\n\nResponda a ultima mensagem do usuario considerando todo o historico acima.";
 
     const erros = [];
 

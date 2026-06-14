@@ -96,6 +96,7 @@ let chatEnviar  = document.getElementById("chat-enviar");
 let chatInput   = document.getElementById("chat-input");
 let chatBox     = document.getElementById("chat-box");
 let totalMensagensUsuario = 0;
+let historicoConversa = [];
 
 let iconeAberto  = document.querySelector(".chat-icone-aberto");
 let iconeFechado = document.querySelector(".chat-icone-fechado");
@@ -140,6 +141,7 @@ function enviarMensagem() {
 
     let primeiraMensagem = totalMensagensUsuario === 0;
     totalMensagensUsuario++;
+    historicoConversa.push({ role: "user", content: texto });
 
     // Exibe a mensagem do usuário no chat
     adicionarMensagem(texto, "usuario");
@@ -227,7 +229,8 @@ async function chamarGemini(mensagemUsuario, elementoDigitando, primeiraMensagem
     // Corpo da requisição enviado para a API segura do projeto
     let corpo = {
         mensagem: mensagemUsuario,
-        primeiraMensagem: primeiraMensagem
+        primeiraMensagem: primeiraMensagem,
+        historico: historicoConversa.slice(-12)
     };
 
     try {
@@ -261,6 +264,8 @@ async function chamarGemini(mensagemUsuario, elementoDigitando, primeiraMensagem
 
         // Extrai o texto da resposta da IA
         if (dados.resposta) {
+            historicoConversa.push({ role: "assistant", content: dados.resposta });
+            historicoConversa = historicoConversa.slice(-12);
             adicionarMensagem(dados.resposta, "bot");
         } else {
             console.error("Resposta inesperada da API Gemini:", dados);
