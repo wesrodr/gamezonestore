@@ -46,6 +46,22 @@ botoesComprar.forEach(function (btn) {
     });
 });
 
+// ===================== BOTÃO APROVEITAR OFERTA (OFERTAS ESPECIAIS) =====================
+
+// Adiciona evento de clique nos botões de ofertas
+let botoesOfertas = document.querySelectorAll(".oferta-card .btn-primario");
+botoesOfertas.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+        let card = btn.closest(".oferta-card");
+        let nomeOferta = card.querySelector("h3").innerText;
+        let economiaElement = card.querySelector(".economia");
+        let economia = economiaElement ? economiaElement.innerText : "";
+        let precoElement = card.querySelector(".por");
+        let preco = precoElement ? precoElement.innerText : "";
+        alert("✅ " + nomeOferta + " adicionado!\n" + preco + "\n" + economia + "\n\nFinalizar a compra pelo nosso chatbot ou formulário de contato.");
+    });
+});
+
 // ===================== FORMULÁRIO DE CONTATO =====================
 
 // Função chamada ao enviar o formulário de contato
