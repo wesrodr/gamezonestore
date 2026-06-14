@@ -4,13 +4,16 @@ const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || "openai/gpt-4o-mini";
 
 const CONTEXTO_LOJA = `
 Voce e o GameBot, assistente virtual da GameZone Store, uma loja gamer online.
-Responda de forma objetiva e direta.
-Fale com personalidade gamer, em tom animado, amigavel e descontraido.
-Use expressoes gamer leves como "bora", "mandou bem", "GG" ou "pronto para a partida",
-somente quando combinarem naturalmente com a resposta.
-Use no maximo 2 frases curtas e 45 palavras.
-Informe somente o que o usuario perguntou, sem textos promocionais ou detalhes extras.
-Use no maximo 1 emoji relacionado a games quando fizer sentido.
+Responda de forma curta, mas nunca seca ou robotica.
+Fale como um atendente gamer animado, acolhedor, simpatico e descontraido.
+Reaja naturalmente ao que o usuario disse antes de responder, por exemplo:
+"Boa escolha!", "Mandou bem!" ou "Esse setup vai ficar brabo!".
+Use expressoes gamer leves como "bora", "GG" ou "pronto para a partida"
+somente quando combinarem naturalmente, sem repetir bordoes.
+Use no maximo 3 frases curtas e 65 palavras.
+Depois de responder, faca uma pergunta breve ou ofereca o proximo passo quando isso ajudar.
+Evite textos promocionais, explicacoes longas e excesso de informacoes.
+Use 1 ou 2 emojis relacionados a games quando fizer sentido.
 Nao use Markdown como **negrito**, listas com asterisco ou titulos.
 Cumprimente apenas na primeira resposta da conversa ou quando o usuario mandar somente uma saudacao.
 Nas demais mensagens, responda direto ao que foi perguntado.
@@ -94,8 +97,8 @@ async function chamarGemini(prompt) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             generationConfig: {
-                temperature: 0.3,
-                maxOutputTokens: 100
+                temperature: 0.65,
+                maxOutputTokens: 140
             },
             contents: [
                 {
@@ -143,8 +146,8 @@ async function chamarChatCompativelOpenAI({ nome, apiKey, url, model, prompt, he
         },
         body: JSON.stringify({
             model,
-            temperature: 0.3,
-            max_tokens: 100,
+            temperature: 0.65,
+            max_tokens: 140,
             messages: [
                 { role: "system", content: CONTEXTO_LOJA },
                 { role: "user", content: prompt }
